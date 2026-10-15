@@ -32,3 +32,38 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4
+      - name: Verify the published storefront
+        timeout-minutes: 5
+        env:
+          PAGES_URL: ${{ steps.deployment.outputs.page_url }}
+        run: |
+          python3 - <<'PY'
+          import hashlib
+          import os
+          import time
+          from urllib.parse import quote, urljoin
+          from urllib.request import Request, urlopen
+          from scripts.build_site import ROOT, public_files
+
+          files = public_files()
+          base = os.environ['PAGES_URL'].rstrip('/') + '/'
+          revision = os.environ['GITHUB_SHA']
+          for attempt in range(6):
+              try:
+                  for name in files:
+                      url = urljoin(base, quote(name, safe='/')) + '?revision=' + revision
+                      request = Request(url, headers={'User-Agent': 'shafiee-pages-check'})
+                      with urlopen(request, timeout=15) as response:
+                          actual = response.read()
+                      expected = (ROOT / name).read_bytes()
+                      if hashlib.sha256(actual).digest() != hashlib.sha256(expected).digest():
+                          raise ValueError('Deployed file does not match this revision: ' + name)
+              except Exception as error:
+                  if attempt == 5:
+                      raise
+                  print(f'Waiting for Pages propagation ({attempt + 1}/6): {error}', flush=True)
+                  time.sleep(10)
+              else:
+                  print(f'Verified {len(files)} published files, including the Features animation.')
+                  break
+          PY

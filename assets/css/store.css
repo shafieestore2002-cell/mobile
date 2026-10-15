@@ -849,6 +849,168 @@ button:focus:not(:focus-visible) {
   color: var(--muted);
   margin: 10px 0 22px;
 }
+.features-section {
+  padding-top: 66px;
+}
+.features-panel {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  overflow: hidden;
+  border: 1px solid #e1e4d8;
+  border-radius: 22px;
+  background: #eeefe7;
+}
+.features-copy {
+  padding: 40px;
+}
+.features-copy h2 {
+  font-size: 32px;
+  line-height: 1.6;
+}
+.features-intro {
+  max-width: 310px;
+  margin-top: 14px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 2;
+}
+.features-list {
+  list-style: none;
+  padding: 0;
+  margin: 25px 0 0;
+}
+.features-list li {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 15px 0;
+  border-top: 1px solid #d9ddce;
+}
+.feature-icon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 39px;
+  height: 39px;
+  border: 1px solid #d3d9c7;
+  border-radius: 10px;
+  color: #586649;
+}
+.features-list h3 {
+  font-size: 13px;
+  margin-bottom: 3px;
+}
+.features-list p {
+  color: #60685b;
+  font-size: 10px;
+  line-height: 1.9;
+}
+.features-art {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-width: 0;
+  padding: 26px 28px;
+  color: #dde3d5;
+  background: #202521;
+}
+.features-art-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  direction: ltr;
+  color: #b1baaa;
+  font:
+    8px Arial,
+    sans-serif;
+  letter-spacing: 1.3px;
+}
+.features-art shafiee-logo-motion {
+  --motion-height: clamp(300px, 30vw, 410px);
+  --logo-width: clamp(135px, 14vw, 190px);
+  --logo-color: #ff7d29;
+  --motion-ink: #dde3d5;
+  flex: 1;
+}
+.features-art-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  font-size: 10px;
+  color: #b1baaa;
+}
+.features-art-footer button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 40px;
+  padding: 7px 12px;
+  background: transparent;
+  border: 1px solid #626c5a;
+  border-radius: 7px;
+  font-size: 10px;
+  color: #e3e8db;
+}
+.features-art-footer button:hover {
+  background: #35402f;
+}
+.features-art-footer button span {
+  font:
+    18px Arial,
+    sans-serif;
+}
+@media (max-width: 850px) {
+  .features-copy {
+    padding: 29px;
+  }
+  .features-copy h2 {
+    font-size: 27px;
+  }
+  .features-intro {
+    font-size: 11px;
+  }
+  .features-list li {
+    gap: 10px;
+  }
+  .features-art {
+    padding: 25px 21px;
+  }
+  .features-art-heading {
+    font-size: 7px;
+    letter-spacing: 0.7px;
+  }
+}
+@media (max-width: 650px) {
+  .features-section {
+    padding-top: 40px;
+  }
+  .features-panel {
+    grid-template-columns: 1fr;
+    border-radius: 16px;
+  }
+  .features-copy {
+    padding: 27px 23px 18px;
+  }
+  .features-copy h2 {
+    font-size: 27px;
+  }
+  .features-list {
+    margin-top: 22px;
+  }
+  .features-list h3 {
+    font-size: 12px;
+  }
+  .features-art {
+    padding: 23px;
+  }
+  .features-art shafiee-logo-motion {
+    --motion-height: 290px;
+    --logo-width: 145px;
+    flex: auto;
+  }
+}
 .collections-section {
   padding-top: 64px;
 }

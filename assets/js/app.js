@@ -325,6 +325,10 @@ $("#clear-favorites").addEventListener("click", () => {
   selectCategory("all");
   $("#favorites-button").focus({ preventScroll: true });
 });
+$("#replay-features").addEventListener("click", async () => {
+  await customElements.whenDefined("shafiee-logo-motion");
+  $("#features shafiee-logo-motion").replay();
+});
 function closeMenu() {
   $("#menu-button").setAttribute("aria-expanded", "false");
   $("#menu-button").setAttribute("aria-label", "باز کردن منو");

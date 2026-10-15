@@ -17,6 +17,7 @@ python3 -m http.server 8000 --bind 127.0.0.1 --directory /workspace/mobile
 - `assets/css/store.css`: ظاهر، چیدمان و واکنش‌گرایی.
 - `assets/js/app.js`: جست‌وجو، فیلترها، پنجره‌ها، علاقه‌مندی‌ها و سبد خرید.
 - `assets/js/catalog.js`: داده‌های کاتالوگ نمایشی؛ مرجع دادهٔ واقعی فروشگاه نیست.
+- `assets/js/logo-motion.js`: انیمیشن لوگوی ارسالی در سکشن چهارم `Features`؛ با پخش هنگام ورود به دید، پخش دوباره و حالت کاهش حرکت.
 - `assets/images/`: تصاویر ارسالی، دسته‌بندی‌شده و محلی. [راهنمای تصاویر](assets/README.md) و [فهرست نگاشت تصاویر](assets/image-manifest.json) مسیرها و جزئیات فایل‌ها را ثبت می‌کنند؛ پوشهٔ تصاویر اولیه حفظ شده است.
 - `assets/fonts/`: دو فایل کوچک WOFF2 از Vazirmatn، بستهٔ Fontsource نسخهٔ `5.3.0`، با [مجوز OFL](assets/fonts/OFL.txt).
 - `tests/test_storefront.py`: آزمون‌های مرورگر برای رفتارهای اصلی فروشگاه.

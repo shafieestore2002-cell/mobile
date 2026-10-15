@@ -2,6 +2,7 @@
 
 import importlib.util
 from pathlib import Path
+import re
 import tempfile
 import unittest
 
@@ -18,6 +19,8 @@ class PagesBuildTests(unittest.TestCase):
         self.assertIn('index.html', paths)
         self.assertIn('assets/js/catalog.js', paths)
         self.assertIn('assets/fonts/OFL.txt', paths)
+        for module in re.findall(r'<script[^>]+src="([^"]+)"', (ROOT / 'index.html').read_text()):
+            self.assertIn(module, paths, f'Missing public script: {module}')
         self.assertTrue(any(name.endswith('.woff2') for name in paths))
         self.assertTrue(any(name.endswith('.webp') for name in paths))
         for name in paths:

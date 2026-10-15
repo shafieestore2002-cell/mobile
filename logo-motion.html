@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logo Motion - Shafiee Digital</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #000;
+            overflow: hidden;
+        }
+
+        .logo-container {
+            position: relative;
+            width: 500px;
+            height: 400px;
+        }
+
+        .logo-svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Glow Filter */
+        .glow {
+            filter: url(#glow);
+        }
+
+        /* Main Loop Styles */
+        .loop {
+            fill: none;
+            stroke: #FF6B00;
+            stroke-width: 35;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            filter: url(#glow);
+        }
+
+        /* Loop 1 - Right Loop */
+        .loop-1 {
+            stroke-dasharray: 600;
+            stroke-dashoffset: 600;
+            animation: drawLoop1 2s ease-out forwards;
+        }
+
+        /* Loop 2 - Left Loop */
+        .loop-2 {
+            stroke-dasharray: 600;
+            stroke-dashoffset: 600;
+            animation: drawLoop2 2s ease-out 0.3s forwards;
+        }
+
+        /* Loop 3 - Connection */
+        .loop-3 {
+            stroke-dasharray: 400;
+            stroke-dashoffset: 400;
+            animation: drawLoop3 1.5s ease-out 0.8s forwards;
+        }
+
+        /* Morph Animation for Loop 1 */
+        @keyframes drawLoop1 {
+            0% {
+                stroke-dashoffset: 600;
+                transform: scale(0.5) rotate(-20deg);
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                stroke-dashoffset: 0;
+                transform: scale(1) rotate(0deg);
+                opacity: 1;
+            }
+        }
+
+        /* Morph Animation for Loop 2 */
+        @keyframes drawLoop2 {
+            0% {
+                stroke-dashoffset: 600;
+                transform: scale(0.5) rotate(20deg);
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                stroke-dashoffset: 0;
+                transform: scale(1) rotate(0deg);
+                opacity: 1;
+            }
+        }
+
+        /* Connection Animation */
+        @keyframes drawLoop3 {
+            0% {
+                stroke-dashoffset: 400;
+                opacity: 0;
+            }
+            100% {
+                stroke-dashoffset: 0;
+                opacity: 1;
+            }
+        }
+
+        /* Pulse Animation */
+        .loop-pulse {
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                stroke-width: 35;
+                filter: url(#glow);
+            }
+            50% {
+                stroke-width: 40;
+                filter: url(#glowIntense);
+            }
+        }
+
+        /* Floating Particles */
+        .particle {
+            fill: #FF6B00;
+            opacity: 0;
+            animation: particleFloat 4s ease-in-out infinite;
+        }
+
+        .particle:nth-child(1) { animation-delay: 0s; }
+        .particle:nth-child(2) { animation-delay: 0.5s; }
+        .particle:nth-child(3) { animation-delay: 1s; }
+        .particle:nth-child(4) { animation-delay: 1.5s; }
+        .particle:nth-child(5) { animation-delay: 2s; }
+        .particle:nth-child(6) { animation-delay: 2.5s; }
+
+        @keyframes particleFloat {
+            0% {
+                opacity: 0;
+                transform: translateY(0) scale(0);
+            }
+            20% {
+                opacity: 1;
+                transform: translateY(-20px) scale(1);
+            }
+            80% {
+                opacity: 0.8;
+                transform: translateY(-80px) scale(0.5);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-120px) scale(0);
+            }
+        }
+
+        /* Rotating Ring Effect */
+        .rotate-ring {
+            fill: none;
+            stroke: #FF6B00;
+            stroke-width: 2;
+            stroke-dasharray: 10 5;
+            opacity: 0.3;
+            animation: rotateRing 10s linear infinite;
+            transform-origin: center;
+        }
+
+        @keyframes rotateRing {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Glow Background Pulse */
+        .glow-bg {
+            fill: #FF6B00;
+            opacity: 0;
+            animation: glowPulse 4s ease-in-out infinite;
+        }
+
+        @keyframes glowPulse {
+            0%, 100% {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            50% {
+                opacity: 0.15;
+                transform: scale(1.1);
+            }
+        }
+
+        /* Color Shift Animation */
+        .color-shift {
+            animation: colorShift 5s ease-in-out infinite;
+        }
+
+        @keyframes colorShift {
+            0%, 100% {
+                stroke: #FF6B00;
+            }
+            33% {
+                stroke: #FF8C00;
+            }
+            66% {
+                stroke: #FF4500;
+            }
+        }
+
+        /* Wavy Effect */
+        .wavy {
+            animation: wavy 2s ease-in-out infinite;
+        }
+
+        @keyframes wavy {
+            0%, 100% {
+                transform: scaleX(1);
+            }
+            50% {
+                transform: scaleX(1.02);
+            }
+        }
+
+        /* Shimmer Effect */
+        .shimmer {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .shimmer::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.3),
+                transparent
+            );
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0% {
+                left: -100%;
+            }
+            100% {
+                left: 100%;
+            }
+        }
+
+        /* 3D Depth Effect */
+        .depth-loop {
+            animation: depthEffect 3s ease-in-out infinite;
+        }
+
+        @keyframes depthEffect {
+            0%, 100% {
+                filter: url(#glow);
+            }
+            50% {
+                filter: url(#glowIntense);
+            }
+        }
+
+        /* Ripple Effect */
+        .ripple {
+            fill: none;
+            stroke: #FF6B00;
+            stroke-width: 2;
+            opacity: 0;
+            animation: rippleEffect 2s ease-out infinite;
+        }
+
+        .ripple:nth-child(1) { animation-delay: 0s; }
+        .ripple:nth-child(2) { animation-delay: 0.4s; }
+        .ripple:nth-child(3) { animation-delay: 0.8s; }
+
+        @keyframes rippleEffect {
+            0% {
+                transform: scale(0.5);
+                opacity: 0.8;
+            }
+            100% {
+                transform: scale(2);
+                opacity: 0;
+            }
+        }
+
+        /* Morph Shape Animation */
+        .morph-shape {
+            animation: morphShape 4s ease-in-out infinite;
+        }
+
+        @keyframes morphShape {
+            0%, 100% {
+                d: path("M 150 200 Q 150 100 250 100 Q 350 100 350 200 Q 350 300 250 300 Q 150 300 150 200");
+            }
+            50% {
+                d: path("M 140 200 Q 140 110 250 110 Q 360 110 360 200 Q 360 290 250 290 Q 140 290 140 200");
+            }
+        }
+
+        /* Particle Burst */
+        .particle-burst {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #FF6B00;
+            border-radius: 50%;
+            animation: burst 1.5s ease-out infinite;
+        }
+
+        @keyframes burst {
+            0% {
+                transform: scale(0);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(3);
+                opacity: 0;
+            }
+        }
+
+        /* Neon Flicker */
+        .neon-flicker {
+            animation: neonFlicker 0.1s ease-in-out infinite;
+        }
+
+        @keyframes neonFlicker {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.8;
+            }
+        }
+
+        /* Elastic Bounce */
+        .elastic-bounce {
+            animation: elasticBounce 1s ease-out forwards;
+        }
+
+        @keyframes elasticBounce {
+            0% {
+                transform: scale(0);
+            }
+            50% {
+                transform: scale(1.2);
+            }
+            70% {
+                transform: scale(0.9);
+            }
+            85% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* Infinity Flow */
+        .infinity-flow {
+            stroke-dashoffset: 1000;
+            animation: infinityFlow 3s linear infinite;
+        }
+
+        @keyframes infinityFlow {
+            0% {
+                stroke-dashoffset: 1000;
+            }
+            100% {
+                stroke-dashoffset: 0;
+            }
+        }
+
+        /* DNA Helix Effect */
+        .helix-dot {
+            animation: helixMove 2s ease-in-out infinite;
+        }
+
+        @keyframes helixMove {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(10px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="logo-container">
+        <!-- Background Glow -->
+        <svg class="logo-svg" viewBox="0 0 500 400">
+            <defs>
+                <!-- Main Glow Filter -->
+                <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+                    <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+                    <feMerge>
+                        <feMergeNode in="coloredBlur"/>
+                        <feMergeNode in="SourceGraphic"/>
+                    </feMerge>
+                </filter>
+
+                <!-- Intense Glow Filter -->
+                <filter id="glowIntense" x="-50%" y="-50%" width="200%" height="200%">
+                    <feGaussianBlur stdDeviation="8" result="coloredBlur"/>
+                    <feMerge>
+                        <feMergeNode in="coloredBlur"/>
+                        <feMergeNode in="coloredBlur"/>
+                        <feMergeNode in="SourceGraphic"/>
+                    </feMerge>
+                </filter>
+
+                <!-- Gradient -->
+                <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#FF6B00;stop-opacity:1" />
+                    <stop offset="50%" style="stop-color:#FF8C00;stop-opacity:1" />
+                    <stop offset="100%" style="stop-color:#FF4500;stop-opacity:1" />
+                </linearGradient>
+
+                <!-- Radial Gradient for Background Glow -->
+                <radialGradient id="bgGlow" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" style="stop-color:#FF6B00;stop-opacity:0.3" />
+                    <stop offset="100%" style="stop-color:#FF6B00;stop-opacity:0" />
+                </radialGradient>
+            </defs>
+
+            <!-- Background Glow Circle -->
+            <circle cx="250" cy="200" r="150" fill="url(#bgGlow)" class="glow-bg"/>
+
+            <!-- Rotating Ring -->
+            <ellipse cx="250" cy="200" rx="180" ry="120" class="rotate-ring"/>
+
+            <!-- Main Logo Loops -->
+            <g class="depth-loop">
+                <!-- Loop 1 - Right side (morphing ellipse) -->
+                <path class="loop loop-1 morph-shape color-shift"
+                      d="M 200 200
+                         Q 200 100 280 100
+                         Q 360 100 360 200
+                         Q 360 300 280 300
+                         Q 200 300 200 200 Z"/>
+
+                <!-- Loop 2 - Left side (morphing ellipse) -->
+                <path class="loop loop-2 morph-shape color-shift"
+                      d="M 300 200
+                         Q 300 100 220 100
+                         Q 140 100 140 200
+                         Q 140 300 220 300
+                         Q 300 300 300 200 Z"/>
+
+                <!-- Connection Path -->
+                <path class="loop loop-3"
+                      d="M 220 200 Q 250 180 280 200 Q 250 220 220 200"/>
+            </g>
+
+            <!-- Infinity Flow Effect -->
+            <path class="loop infinity-flow"
+                  d="M 140 200
+                     Q 140 120 200 120
+                     Q 260 120 300 200
+                     Q 340 280 300 280
+                     Q 260 280 220 280
+                     Q 160 280 160 200"
+                  stroke="url(#gradient)"
+                  stroke-width="8"
+                  fill="none"
+                  opacity="0.5"/>
+
+            <!-- Particles -->
+            <g class="particles">
+                <circle class="particle" cx="180" cy="200" r="4"/>
+                <circle class="particle" cx="250" cy="150" r="3"/>
+                <circle class="particle" cx="320" cy="200" r="5"/>
+                <circle class="particle" cx="220" cy="250" r="3"/>
+                <circle class="particle" cx="280" cy="250" r="4"/>
+                <circle class="particle" cx="250" cy="200" r="3"/>
+            </g>
+
+            <!-- Ripple Effects -->
+            <g transform="translate(250, 200)">
+                <ellipse class="ripple" rx="100" ry="70"/>
+                <ellipse class="ripple" rx="100" ry="70"/>
+                <ellipse class="ripple" rx="100" ry="70"/>
+            </g>
+
+            <!-- Helix Dots -->
+            <g class="helix-dots">
+                <circle class="helix-dot" cx="200" cy="180" r="5" fill="#FF6B00"/>
+                <circle class="helix-dot" cx="220" cy="200" r="4" fill="#FF8C00"/>
+                <circle class="helix-dot" cx="250" cy="220" r="5" fill="#FF4500"/>
+                <circle class="helix-dot" cx="280" cy="200" r="4" fill="#FF8C00"/>
+                <circle class="helix-dot" cx="300" cy="180" r="5" fill="#FF6B00"/>
+            </g>
+        </svg>
+
+        <!-- Particle Burst Elements -->
+        <div class="particle-burst" style="left: 50%; top: 50%;"></div>
+    </div>
+
+    <script>
+        // Dynamic particle generation
+        const container = document.querySelector('.logo-container');
+
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.style.cssText = `
+                position: absolute;
+                width: ${Math.random() * 6 + 2}px;
+                height: ${Math.random() * 6 + 2}px;
+                background: linear-gradient(135deg, #FF6B00, #FF8C00);
+                border-radius: 50%;
+                left: ${Math.random() * 100}%;
+                top: ${Math.random() * 100}%;
+                animation: particleFloat ${Math.random() * 3 + 2}s ease-in-out infinite;
+                animation-delay: ${Math.random() * 2}s;
+                pointer-events: none;
+            `;
+            container.appendChild(particle);
+        }
+
+        // Create initial particles
+        for (let i = 0; i < 20; i++) {
+            createParticle();
+        }
+
+        // Mouse interaction - particles follow cursor
+        container.addEventListener('mousemove', (e) => {
+            const rect = container.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            const particle = document.createElement('div');
+            particle.style.cssText = `
+                position: absolute;
+                width: 8px;
+                height: 8px;
+                background: radial-gradient(circle, #FF6B00, transparent);
+                border-radius: 50%;
+                left: ${x}px;
+                top: ${y}px;
+                animation: particleBurst 0.5s ease-out forwards;
+                pointer-events: none;
+            `;
+            container.appendChild(particle);
+
+            setTimeout(() => particle.remove(), 500);
+        });
+
+        // Add burst animation keyframes dynamically
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes particleBurst {
+                0% {
+                    transform: scale(1);
+                    opacity: 1;
+                }
+                100% {
+                    transform: scale(0) translate(${-50 + Math.random() * 100}px, ${-50 + Math.random() * 100}px);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Morph animation control
+        const loops = document.querySelectorAll('.morph-shape');
+        let morphPhase = 0;
+
+        function updateMorph() {
+            morphPhase += 0.02;
+            const scale = 1 + Math.sin(morphPhase) * 0.05;
+
+            loops.forEach(loop => {
+                loop.style.transform = `scale(${scale})`;
+            });
+
+            requestAnimationFrame(updateMorph);
+        }
+
+        // Start morph animation after initial load
+        setTimeout(updateMorph, 3000);
+
+        // Color cycle
+        const colorLoop = document.querySelectorAll('.color-shift');
+        let colorPhase = 0;
+
+        function updateColors() {
+            colorPhase += 0.01;
+            const hue = 25 + Math.sin(colorPhase) * 15;
+            colorLoop.forEach(el => {
+                el.style.stroke = `hsl(${hue}, 100%, 50%)`;
+            });
+            requestAnimationFrame(updateColors);
+        }
+
+        setTimeout(updateColors, 3000);
+
+        // Console branding
+        console.log('%c🚀 Shafiee Digital - Logo Motion', 'color: #FF6B00; font-size: 24px; font-weight: bold;');
+        console.log('%cProfessional Mobile & Digital Accessories Store', 'color: #FF8C00; font-size: 14px;');
+    </script>
+</body>
+</html>

@@ -10,7 +10,8 @@ ROOT = Path(__file__).resolve().parents[1]
 BASE_FILES = {
     'index.html', 'shafiee-advanced.html', 'logo-motion.html', 'shafiee-logo2.png',
     'assets/css/store.css', 'assets/js/app.js', 'assets/js/catalog.js',
-    'assets/js/logo-motion.js',
+    'assets/js/logo-motion.js', 'assets/js/experience.js',
+    'assets/css/experience.css', 'assets/video/iphone-detail.mp4',
     'assets/fonts/OFL.txt',
 }
 MARKER = '.shafiee-pages-build'

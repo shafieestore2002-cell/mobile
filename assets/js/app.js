@@ -85,7 +85,8 @@ function productCard(product) {
   const favorite = state.favorites.includes(product.id);
   const name = escape(product.name);
   return `<article class="product-card" data-product-id="${product.id}" data-category="${product.category}" data-price="${product.price}">
-    <div class="product-visual">
+    <div class="product-visual" data-tilt>
+      <span class="product-index" aria-hidden="true">${String(products.indexOf(product) + 1).padStart(2, "0")} / THE EDIT</span>
       ${product.badge ? `<span class="product-badge ${product.badge === "انتخاب ویژه" ? "orange" : ""}">${escape(product.badge)}</span>` : ""}
       <button type="button" class="icon-button wishlist-button" data-action="favorite" data-id="${product.id}" aria-pressed="${favorite}" aria-label="${favorite ? "حذف" : "افزودن"} ${name} ${favorite ? "از" : "به"} علاقه‌مندی‌ها">${icon("heart")}</button>
       <button type="button" class="product-image-button" data-action="details" data-id="${product.id}" aria-label="جزئیات ${name}"><img src="${product.image}" alt="${name}" width="400" height="400" loading="lazy" decoding="async"></button>
@@ -327,7 +328,12 @@ $("#clear-favorites").addEventListener("click", () => {
 });
 $("#replay-features").addEventListener("click", async () => {
   await customElements.whenDefined("shafiee-logo-motion");
-  $("#features shafiee-logo-motion").replay();
+  const motion = $("#features shafiee-logo-motion");
+  if (document.documentElement.dataset.motion === "reduced") {
+    motion.stop();
+    motion.finished = true;
+    motion.render(4.6);
+  } else motion.replay();
 });
 function closeMenu() {
   $("#menu-button").setAttribute("aria-expanded", "false");

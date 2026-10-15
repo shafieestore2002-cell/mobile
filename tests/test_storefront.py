@@ -344,6 +344,56 @@ class StorefrontAcceptance(unittest.TestCase):
         page.keyboard.press("Escape")
         expect(page.locator("#product-dialog")).not_to_be_visible()
 
+    def test_scroll_story_morphs_and_scrubs_the_local_video(self):
+        page = self.open_store()
+        expect(page.locator('html')).to_have_attribute('data-motion', 'full')
+        stage = page.locator('#story-stage')
+        original = page.locator('#story-morph').get_attribute('d')
+        metrics = page.locator('#hero-story').evaluate(
+            'el => ({top: el.offsetTop, travel: el.offsetHeight - document.querySelector("#story-stage").offsetHeight - 12})'
+        )
+        self.assertGreater(metrics['travel'], 100)
+        page.evaluate('(m) => scrollTo({top: m.top + m.travel * .72 - 12, behavior: "instant"})', metrics)
+        page.wait_for_function('Number(document.querySelector("#story-stage").dataset.storyProgress) > .70')
+        self.assertNotEqual(page.locator('#story-morph').get_attribute('d'), original)
+        expect(page.locator('#story-finale')).to_be_visible()
+        self.assertFalse(page.locator('#story-finale').evaluate('el => el.inert'))
+        page.wait_for_function('document.querySelector("#story-video").currentTime > 1')
+        self.assertTrue(page.locator('#story-video').evaluate('el => el.paused && el.muted'))
+        page.evaluate('(m) => scrollTo({top: m.top - 12, behavior: "instant"})', metrics)
+        page.wait_for_function('Number(document.querySelector("#story-stage").dataset.storyProgress) < .01')
+        self.assertTrue(page.locator('#story-finale').evaluate('el => el.inert'))
+
+    def test_motion_control_persists_without_losing_the_cart(self):
+        page = self.open_store()
+        first = self.ids()[0]
+        page.locator(f"button[data-action='add'][data-id='{first}']").click()
+        page.locator('#motion-toggle').click()
+        expect(page.locator('html')).to_have_attribute('data-motion', 'reduced')
+        expect(page.locator('#motion-toggle')).to_have_attribute('aria-pressed', 'true')
+        self.cart_count(1)
+        page.reload(wait_until='networkidle')
+        expect(page.locator('html')).to_have_attribute('data-motion', 'reduced')
+        self.cart_count(1)
+        self.assertEqual(page.locator('#story-stage').evaluate('el => getComputedStyle(el).position'), 'relative')
+        self.assertEqual(page.locator('#story-video').get_attribute('src'), None)
+        page.locator('#motion-toggle').click()
+        expect(page.locator('html')).to_have_attribute('data-motion', 'full')
+
+    def test_system_reduced_motion_starts_static_and_all_cards_remain_usable(self):
+        _, page = self.new_page(width=390, height=844, mobile=True, reduced_motion='reduce')
+        self.open_store(page)
+        expect(page.locator('html')).to_have_attribute('data-motion', 'reduced')
+        self.assertEqual(page.locator('#story-video').get_attribute('src'), None)
+        self.assertEqual(page.locator('#story-stage').evaluate('el => getComputedStyle(el).position'), 'relative')
+        # The organic card corners must not clip the wishlist touch targets.
+        for favorite in self.cards(page).locator('button[data-action="favorite"]').all():
+            favorite.click()
+            expect(favorite).to_have_attribute('aria-pressed', 'true')
+        page.locator('#motion-toggle').click()
+        expect(page.locator('html')).to_have_attribute('data-motion', 'full')
+        self.assertEqual(page.locator('#story-stage').evaluate('el => getComputedStyle(el).position'), 'sticky')
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

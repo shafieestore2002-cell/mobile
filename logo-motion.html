@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Logo Motion - Shafiee Digital</title>
+    <title>نشان شفیعی استور</title>
+    <link rel="icon" href="shafiee-logo2.png" type="image/png">
     <style>
         * {
             margin: 0;
@@ -13,23 +14,45 @@
 
         body {
             min-height: 100vh;
+            min-height: 100svh;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
+            gap: 1.5rem;
+            padding: 1.5rem;
             background: #000;
-            overflow: hidden;
+            overflow-x: hidden;
+            font-family: Tahoma, Arial, sans-serif;
         }
 
         .logo-container {
             position: relative;
-            width: 500px;
-            height: 400px;
+            width: min(500px, 100%);
+            aspect-ratio: 5 / 4;
+            flex-shrink: 0;
         }
 
         .logo-svg {
+            display: block;
             width: 100%;
             height: 100%;
         }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            min-height: 44px;
+            padding: 0.75rem 1.25rem;
+            color: #ffb275;
+            border: 1px solid #783d14;
+            border-radius: 999px;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .back-link:hover { background: #281405; }
+        .back-link:focus-visible { outline: 3px solid #ffb275; outline-offset: 5px; }
 
         /* Glow Filter */
         .glow {
@@ -400,12 +423,49 @@
                 transform: translateY(10px);
             }
         }
+
+        /* Compose the entrance with the existing shape and color animations. */
+        .loop-1.morph-shape {
+            animation: drawLoop1 2s ease-out forwards, morphShape 4s ease-in-out infinite, colorShift 5s ease-in-out infinite;
+        }
+
+        .loop-2.morph-shape {
+            animation: drawLoop2 2s ease-out 0.3s forwards, morphShape 4s ease-in-out infinite, colorShift 5s ease-in-out infinite;
+        }
+
+        .pointer-particle {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: radial-gradient(circle, #ff6b00, transparent);
+            border-radius: 50%;
+            animation: pointerBurst 0.5s ease-out forwards;
+            pointer-events: none;
+        }
+
+        @keyframes pointerBurst {
+            from { transform: scale(1); opacity: 1; }
+            to { transform: translate(var(--burst-x), var(--burst-y)) scale(0); opacity: 0; }
+        }
+
+        .motion-paused *, .motion-paused *::before, .motion-paused *::after {
+            animation-play-state: paused !important;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation: none !important; }
+            .loop { stroke-dashoffset: 0 !important; opacity: 1 !important; transform: none !important; }
+            .glow-bg { opacity: 0.1; }
+            .particle, .particle-burst, .ambient-particle, .pointer-particle, .ripple { display: none; }
+        }
     </style>
 </head>
 <body>
-    <div class="logo-container">
+    <main class="logo-container">
         <!-- Background Glow -->
-        <svg class="logo-svg" viewBox="0 0 500 400">
+        <svg class="logo-svg" viewBox="0 0 500 400" role="img" aria-labelledby="logo-title" aria-describedby="logo-description">
+            <title id="logo-title">نشان شفیعی استور</title>
+            <desc id="logo-description">نشان نارنجی فروشگاه با حلقه‌های درهم‌تنیده روی زمینهٔ مشکی</desc>
             <defs>
                 <!-- Main Glow Filter -->
                 <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
@@ -510,15 +570,29 @@
         </svg>
 
         <!-- Particle Burst Elements -->
-        <div class="particle-burst" style="left: 50%; top: 50%;"></div>
-    </div>
+        <div class="particle-burst" style="left: 50%; top: 50%;" aria-hidden="true"></div>
+    </main>
+    <a class="back-link" href="index.html">بازگشت به فروشگاه</a>
 
     <script>
-        // Dynamic particle generation
         const container = document.querySelector('.logo-container');
+        const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+        const loops = document.querySelectorAll('.morph-shape');
+        const pointerParticles = new Map();
+        const maxPointerParticles = 12;
+        let animationFrame = 0;
+        let startTimer = 0;
+        let hasStarted = false;
+        let lastFrameTime = 0;
+        let lastPointerTime = -Infinity;
+        let morphPhase = 0;
+        let colorPhase = 0;
+        const canAnimate = () => !reducedMotion.matches && !document.hidden;
 
         function createParticle() {
             const particle = document.createElement('div');
+            particle.className = 'ambient-particle';
+            particle.setAttribute('aria-hidden', 'true');
             particle.style.cssText = `
                 position: absolute;
                 width: ${Math.random() * 6 + 2}px;
@@ -534,86 +608,83 @@
             container.appendChild(particle);
         }
 
-        // Create initial particles
-        for (let i = 0; i < 20; i++) {
-            createParticle();
+        function clearPointerParticles() {
+            for (const [particle, timer] of pointerParticles) {
+                clearTimeout(timer);
+                particle.remove();
+            }
+            pointerParticles.clear();
         }
 
-        // Mouse interaction - particles follow cursor
-        container.addEventListener('mousemove', (e) => {
-            const rect = container.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-
+        container.addEventListener('pointermove', (event) => {
+            if (!canAnimate() || event.pointerType === 'touch') return;
+            const now = performance.now();
+            if (now - lastPointerTime < 60 || pointerParticles.size >= maxPointerParticles) return;
+            lastPointerTime = now;
+            const bounds = container.getBoundingClientRect();
             const particle = document.createElement('div');
-            particle.style.cssText = `
-                position: absolute;
-                width: 8px;
-                height: 8px;
-                background: radial-gradient(circle, #FF6B00, transparent);
-                border-radius: 50%;
-                left: ${x}px;
-                top: ${y}px;
-                animation: particleBurst 0.5s ease-out forwards;
-                pointer-events: none;
-            `;
+            particle.className = 'pointer-particle';
+            particle.setAttribute('aria-hidden', 'true');
+            particle.style.left = `${event.clientX - bounds.left}px`;
+            particle.style.top = `${event.clientY - bounds.top}px`;
+            particle.style.setProperty('--burst-x', `${Math.random() * 100 - 50}px`);
+            particle.style.setProperty('--burst-y', `${Math.random() * 100 - 50}px`);
             container.appendChild(particle);
-
-            setTimeout(() => particle.remove(), 500);
+            const remove = () => {
+                clearTimeout(pointerParticles.get(particle));
+                pointerParticles.delete(particle);
+                particle.remove();
+            };
+            pointerParticles.set(particle, setTimeout(remove, 600));
+            particle.addEventListener('animationend', remove, { once: true });
         });
 
-        // Add burst animation keyframes dynamically
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes particleBurst {
-                0% {
-                    transform: scale(1);
-                    opacity: 1;
-                }
-                100% {
-                    transform: scale(0) translate(${-50 + Math.random() * 100}px, ${-50 + Math.random() * 100}px);
-                    opacity: 0;
-                }
-            }
-        `;
-        document.head.appendChild(style);
-
-        // Morph animation control
-        const loops = document.querySelectorAll('.morph-shape');
-        let morphPhase = 0;
-
-        function updateMorph() {
-            morphPhase += 0.02;
+        function animate(time) {
+            animationFrame = 0;
+            if (!canAnimate()) { syncMotion(); return; }
+            const step = lastFrameTime ? Math.min((time - lastFrameTime) / (1000 / 60), 2) : 1;
+            lastFrameTime = time;
+            morphPhase += 0.02 * step;
+            colorPhase += 0.01 * step;
             const scale = 1 + Math.sin(morphPhase) * 0.05;
-
+            const hue = 25 + Math.sin(colorPhase) * 15;
             loops.forEach(loop => {
                 loop.style.transform = `scale(${scale})`;
+                loop.style.stroke = `hsl(${hue}, 100%, 50%)`;
             });
-
-            requestAnimationFrame(updateMorph);
+            animationFrame = requestAnimationFrame(animate);
         }
 
-        // Start morph animation after initial load
-        setTimeout(updateMorph, 3000);
-
-        // Color cycle
-        const colorLoop = document.querySelectorAll('.color-shift');
-        let colorPhase = 0;
-
-        function updateColors() {
-            colorPhase += 0.01;
-            const hue = 25 + Math.sin(colorPhase) * 15;
-            colorLoop.forEach(el => {
-                el.style.stroke = `hsl(${hue}, 100%, 50%)`;
-            });
-            requestAnimationFrame(updateColors);
+        function syncMotion() {
+            const active = canAnimate();
+            document.documentElement.classList.toggle('motion-paused', !active);
+            if (!active) {
+                cancelAnimationFrame(animationFrame);
+                clearTimeout(startTimer);
+                animationFrame = startTimer = lastFrameTime = 0;
+                clearPointerParticles();
+                if (reducedMotion.matches) {
+                    container.querySelectorAll('.ambient-particle').forEach(particle => particle.remove());
+                    loops.forEach(loop => { loop.style.transform = ''; loop.style.stroke = ''; });
+                }
+                return;
+            }
+            if (!container.querySelector('.ambient-particle')) {
+                for (let i = 0; i < 20; i++) createParticle();
+            }
+            if (animationFrame || startTimer) return;
+            if (hasStarted) animationFrame = requestAnimationFrame(animate);
+            else startTimer = setTimeout(() => {
+                startTimer = 0;
+                if (!canAnimate()) { syncMotion(); return; }
+                hasStarted = true;
+                animationFrame = requestAnimationFrame(animate);
+            }, 3000);
         }
 
-        setTimeout(updateColors, 3000);
-
-        // Console branding
-        console.log('%c🚀 Shafiee Digital - Logo Motion', 'color: #FF6B00; font-size: 24px; font-weight: bold;');
-        console.log('%cProfessional Mobile & Digital Accessories Store', 'color: #FF8C00; font-size: 14px;');
+        reducedMotion.addEventListener('change', syncMotion);
+        document.addEventListener('visibilitychange', syncMotion);
+        syncMotion();
     </script>
 </body>
 </html>

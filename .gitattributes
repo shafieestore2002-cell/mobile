@@ -1,0 +1,2 @@
+# Preserve the supplied image library byte-for-byte, including original SVG whitespace.
+assets/images/** -whitespace
